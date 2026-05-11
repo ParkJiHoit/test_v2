@@ -1,0 +1,2650 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>옆커폰 창업 가이드북</title>
+  
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    :root {
+      --bg:         #f7f3ed;
+      --text:       #1e1e2c;
+      --accent:     #c95f3f;
+      --accent-dim: rgba(201,95,63,.14);
+      --text-sub:   rgba(30,30,44,.62);
+      --text-muted: rgba(30,30,44,.44);
+      --sep:        rgba(30,30,44,.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ═══ GRAIN OVERLAY ═══ */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      opacity: .075;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 140px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Subtle warm radial wash */
+    .atmo {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 75% 60% at 50% 52%,
+        rgba(30,30,44,.07) 0%,
+        rgba(245,245,245,0) 70%);
+      pointer-events: none;
+      opacity: 0;
+      animation: atmoIn 2.5s ease forwards .5s;
+    }
+    @keyframes atmoIn { to { opacity: 1; } }
+
+    /* ═══ WARP RINGS ═══ */
+    .warp-rings {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+    }
+    .ring:nth-child(1) {
+      width: 220px; height: 110px;
+      border: 1px solid rgba(30,30,44,.55);
+      animation: ringPulse 3.8s ease-out infinite 1.5s;
+    }
+    .ring:nth-child(2) {
+      width: 440px; height: 200px;
+      border: 1px solid rgba(30,30,44,.32);
+      animation: ringPulse 3.8s ease-out infinite 2.45s;
+    }
+    .ring:nth-child(3) {
+      width: 680px; height: 300px;
+      border: 1px solid rgba(30,30,44,.17);
+      animation: ringPulse 3.8s ease-out infinite 3.4s;
+    }
+    .ring:nth-child(4) {
+      width: 960px; height: 420px;
+      border: 1px solid rgba(30,30,44,.08);
+      animation: ringPulse 3.8s ease-out infinite 4.35s;
+    }
+
+    @keyframes ringPulse {
+      0%   { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+      6%   { opacity: .82; }
+      72%  { opacity: .22; }
+      100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
+    }
+
+    /* ═══ BADGE ═══ */
+    .badge {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px;
+      border-radius: 100px;
+      border: 1px solid rgba(30,30,44,.25);
+      background: rgba(30,30,44,.06);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--accent);
+      letter-spacing: .15em;
+      margin-bottom: 26px;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: slideUp .7s cubic-bezier(.23,1,.32,1) forwards .4s;
+    }
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      animation: dotPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%,100% { opacity:1; transform: scale(1); }
+      50%      { opacity:.3; transform: scale(.6); }
+    }
+
+    /* ═══ PRE-HEADER ═══ */
+    .pre-header {
+      position: relative;
+      z-index: 2;
+      font-weight: 300;
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-sub);
+      letter-spacing: .04em;
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: slideUp .7s cubic-bezier(.23,1,.32,1) forwards .85s;
+    }
+
+    /* ═══ COSMIC BLOCK ═══ */
+    .cosmic-block {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 50px;
+    }
+
+    .nation-tag {
+      font-weight: 300;
+      font-size: clamp(11px, 1.6vw, 15px);
+      color: var(--text-sub);
+      letter-spacing: .6em;
+      margin-bottom: 4px;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: slideUp .5s ease forwards 1.2s;
+    }
+
+    /* Cosmic number wrapper — the BOOM animation */
+    .number-wrap {
+      position: relative;
+      opacity: 0;
+      animation: cosmicBoom 1.05s cubic-bezier(.16,1,.3,1) forwards 1.45s;
+    }
+
+    @keyframes cosmicBoom {
+      0%   { opacity:0; transform: scale(.025); filter: blur(50px) brightness(1.4); }
+      45%  { opacity:1; transform: scale(1.1);  filter: blur(0) brightness(1.1); }
+      72%  { transform: scale(.96); filter: brightness(1); }
+      100% { opacity:1; transform: scale(1);    filter: brightness(1); }
+    }
+
+    /* Bloom glow — warm terracotta wash */
+    .number-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 140%;
+      aspect-ratio: 2 / 1;
+      transform: translate(-50%, -45%);
+      background: radial-gradient(ellipse at center,
+        rgba(30,30,44,.12) 0%,
+        rgba(30,30,44,.04) 50%,
+        transparent 72%);
+      filter: blur(24px);
+      pointer-events: none;
+      animation: bloomBreath 3.2s ease-in-out infinite 2.7s;
+    }
+    @keyframes bloomBreath {
+      0%,100% { opacity:.7; transform: translate(-50%,-45%) scale(1); }
+      50%      { opacity:1;  transform: translate(-50%,-45%) scale(1.08); }
+    }
+
+    /* THE NUMBER */
+    .hero-num {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(108px, 22vw, 240px);
+      font-weight: 800;
+      line-height: .82;
+      letter-spacing: .02em;
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(
+        90deg,
+        #a84535  0%,
+        #c95f3f  20%,
+        #e07050  50%,
+        #c95f3f  80%,
+        #a84535  100%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 1.5px rgba(168,69,53,.22);
+      background-clip: text;
+      text-shadow:
+        0 0 80px rgba(201,95,63,.18),
+        0 4px 32px rgba(201,95,63,.12);
+      animation: shimmerFlow 4.5s linear infinite 3.2s;
+    }
+    @keyframes shimmerFlow {
+      0%   { background-position: 110% center; }
+      100% { background-position: -110% center; }
+    }
+
+    /* 호점 돌파 */
+    .milestone-label {
+      font-weight: 700;
+      font-size: clamp(20px, 4.2vw, 50px);
+      letter-spacing: .18em;
+      color: var(--text);
+      margin-top: -4px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(22px) scaleY(.88);
+      animation: popIn .95s cubic-bezier(.34,1.56,.64,1) forwards 2.6s;
+    }
+    @keyframes popIn {
+      to { opacity:1; transform: translateY(0) scaleY(1); }
+    }
+
+    /* ═══ TAGLINE ═══ */
+    .tagline {
+      position: relative;
+      z-index: 2;
+      font-weight: 300;
+      font-size: clamp(14px, 1.9vw, 19px);
+      color: var(--text-sub);
+      line-height: 1.9;
+      max-width: 420px;
+      margin-bottom: 54px;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: slideUp .7s ease forwards 3.35s;
+    }
+
+    /* ═══ RULE ═══ */
+    .rule {
+      position: relative;
+      z-index: 2;
+      width: 1px;
+      height: 38px;
+      background: linear-gradient(to bottom,
+        transparent,
+        rgba(30,30,44,.3),
+        transparent);
+      margin: 0 auto 46px;
+      opacity: 0;
+      animation: fadeIn .5s ease forwards 3.6s;
+    }
+
+    /* ═══ STATS ═══ */
+    .stats {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(22px, 6vw, 76px);
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: slideUp .7s ease forwards 3.85s;
+    }
+
+    .stat-sep {
+      width: 1px;
+      height: 34px;
+      background: var(--sep);
+      flex-shrink: 0;
+    }
+
+    .stat { text-align: center; }
+
+    .stat-val {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(30px, 5vw, 46px);
+      line-height: 1;
+      color: var(--text);
+      letter-spacing: .04em;
+    }
+    .stat-val .accent { color: var(--accent); }
+
+    .stat-lbl {
+      font-size: clamp(10px, 1.2vw, 12px);
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: .1em;
+      margin-top: 6px;
+    }
+
+    /* ═══ SCROLL HINT ═══ */
+    .scroll-hint {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeIn .6s ease forwards 5.4s;
+    }
+    .scroll-label {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: .24em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .scroll-bar {
+      width: 1px;
+      height: 34px;
+      background: linear-gradient(to bottom, rgba(30,30,44,.7), transparent);
+      animation: barAnim 2s ease-in-out infinite 6s;
+    }
+    @keyframes barAnim {
+      0%,100% { transform: scaleY(1) translateY(0); opacity: .5; }
+      50%      { transform: scaleY(.55) translateY(4px); opacity: 1; }
+    }
+
+    /* ═══ SHARED KEYFRAMES ═══ */
+    @keyframes slideUp {
+      to { opacity:1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      to { opacity:1; }
+    }
+
+    /* ═══ MOBILE ═══ */
+    @media (max-width: 520px) {
+      .stat-sep { display: none; }
+      .stats { gap: 28px; }
+      .hero { padding: 50px 20px 110px; }
+      .ring:nth-child(3),
+      .ring:nth-child(4) { display: none; }
+    }
+
+    /* ═══════════════════════════════
+       FAQ SECTION
+    ═══════════════════════════════ */
+    .faq-section {
+      padding: 120px 24px 140px;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .faq-header {
+      text-align: center;
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .faq-header.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-tag {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .28em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .faq-header h2 {
+      font-size: clamp(34px, 5.8vw, 56px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.02em;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    .faq-header p {
+      font-weight: 300;
+      font-size: clamp(14px, 1.8vw, 17px);
+      color: var(--text-sub);
+    }
+
+    /* Grid */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    /* Card */
+    .faq-card {
+      background: #ffffff;
+      border: 1px solid rgba(30,30,44,.08);
+      border-radius: 18px;
+      padding: 34px 32px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .55s ease, transform .55s ease, box-shadow .3s ease;
+    }
+    .faq-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .faq-card:hover {
+      box-shadow: 0 8px 32px rgba(30,30,44,.06);
+    }
+
+    /* Placeholder card */
+    .faq-card.placeholder {
+      background: rgba(30,30,44,.02);
+      border-style: dashed;
+      border-color: rgba(30,30,44,.12);
+    }
+    .faq-card.placeholder:hover {
+      box-shadow: none;
+    }
+
+    /* Q number */
+    .faq-num {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: .24em;
+      margin-bottom: 12px;
+    }
+
+    /* Question text */
+    .faq-q {
+      font-size: clamp(15px, 1.9vw, 17px);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    /* Answer area */
+    .faq-a-wrap {
+      position: relative;
+      min-height: 108px;
+    }
+
+    .faq-a {
+      font-size: clamp(13px, 1.5vw, 14px);
+      font-weight: 300;
+      color: rgba(30,30,44,.68);
+      line-height: 1.85;
+    }
+
+    /* Streaming cursor */
+    .faq-cursor {
+      display: inline-block;
+      width: 1.5px;
+      height: .9em;
+      background: var(--accent);
+      margin-left: 1px;
+      vertical-align: text-bottom;
+      border-radius: 1px;
+      animation: cursorBlink .65s step-end infinite;
+      opacity: 1;
+      transition: opacity .4s ease;
+    }
+    .faq-cursor.done {
+      animation: none;
+      opacity: 0;
+    }
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* Placeholder skeleton lines */
+    .placeholder-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .ph-line {
+      height: 11px;
+      background: rgba(30,30,44,.07);
+      border-radius: 6px;
+    }
+    .ph-line:nth-child(2) { width: 88%; }
+    .ph-line:nth-child(3) { width: 72%; }
+    .ph-line:nth-child(4) { width: 55%; }
+
+    .placeholder-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(30,30,44,.28);
+      letter-spacing: .08em;
+    }
+    .placeholder-badge::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(30,30,44,.2);
+    }
+
+    @media (max-width: 680px) {
+      .faq-grid { grid-template-columns: 1fr; }
+      .faq-section { padding: 80px 20px 100px; }
+      .faq-card { padding: 28px 24px; }
+    }
+
+    /* ═══════════════════════════════
+       REVENUE SECTION
+    ═══════════════════════════════ */
+    .revenue-section {
+      background: #ffffff;
+      padding: 120px 24px 140px;
+    }
+
+    .rev-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .rev-header {
+      text-align: center;
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .rev-header.visible { opacity: 1; transform: translateY(0); }
+
+    .rev-header h2 {
+      font-size: clamp(32px, 5.2vw, 54px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.02em;
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+
+    .rev-disclaimer {
+      font-size: clamp(12px, 1.5vw, 14px);
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .rev-disclaimer strong {
+      font-weight: 500;
+      color: var(--text-sub);
+    }
+
+    /* ── Range row ── */
+    .range-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      padding-bottom: 44px;
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease .15s, transform .6s ease .15s;
+    }
+    .range-row.visible { opacity: 1; transform: translateY(0); }
+
+    /* connecting line */
+    .range-row::after {
+      content: '';
+      position: absolute;
+      bottom: 18px;
+      left: 16%;
+      right: 16%;
+      height: 1px;
+      background: linear-gradient(to right,
+        rgba(30,30,44,.12),
+        rgba(30,30,44,.4) 50%,
+        rgba(30,30,44,.12));
+    }
+
+    .rp {
+      width: 33%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .rp-tag {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-muted);
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .rp-num {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(30px, 4.5vw, 52px);
+      line-height: 1;
+      color: var(--text);
+      letter-spacing: .01em;
+    }
+    .rp-avg .rp-num {
+      font-size: clamp(38px, 7vw, 64px);
+      color: var(--accent);
+    }
+
+    .rp-won {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-top: 6px;
+      margin-bottom: 20px;
+    }
+    .rp-avg .rp-won {
+      color: rgba(30,30,44,.55);
+      font-size: 13px;
+    }
+
+    .rp-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(30,30,44,.2);
+      position: relative;
+      z-index: 1;
+    }
+    .rp-avg .rp-dot {
+      width: 14px; height: 14px;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(30,30,44,.14);
+    }
+
+    /* ── Revenue structure ── */
+    .rev-structure {
+      margin-bottom: 72px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease .2s, transform .6s ease .2s;
+    }
+    .rev-structure.visible { opacity: 1; transform: translateY(0); }
+
+    .rev-structure-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .stream-list {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .stream-item {
+      display: grid;
+      grid-template-columns: 180px 1fr 44px;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .stream-name {
+      font-size: clamp(13px, 1.6vw, 15px);
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .stream-sub {
+      display: block;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-top: 2px;
+      letter-spacing: .02em;
+    }
+
+    .stream-bar-bg {
+      height: 6px;
+      background: rgba(30,30,44,.06);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .stream-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, rgba(30,30,44,.5), var(--accent));
+      border-radius: 100px;
+      transition: width 1s cubic-bezier(.25,1,.5,1);
+    }
+
+    .stream-pct {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 22px;
+      color: var(--accent);
+      letter-spacing: .04em;
+      text-align: right;
+    }
+
+    /* ── Callout card (refined) ── */
+    .rev-callout {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #1e1e2c;
+      margin-bottom: 56px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease .25s, transform .6s ease .25s;
+      /* top accent line */
+      box-shadow: inset 0 2px 0 0 rgba(255,255,255,.12);
+    }
+    .rev-callout.visible { opacity: 1; transform: translateY(0); }
+
+    .callout-panel {
+      padding: 52px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .callout-micro {
+      font-size: 10px;
+      font-weight: 400;
+      color: rgba(255,255,255,.3);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .callout-main-num {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(48px, 7.5vw, 84px);
+      line-height: .88;
+      color: #f2f2f2;
+      letter-spacing: .01em;
+    }
+
+    .callout-main-num {
+      color: #e2d5c3;
+    }
+    .callout-panel.right .callout-main-num {
+      color: var(--accent);
+    }
+
+    .callout-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(226,213,195,.62);
+      margin-top: 14px;
+      line-height: 1.6;
+      letter-spacing: .01em;
+    }
+
+    .callout-vdiv {
+      background: rgba(255,255,255,.07);
+    }
+
+    /* ── Footer copy ── */
+    .rev-footer-copy {
+      text-align: center;
+      font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 300;
+      color: var(--text-sub);
+      line-height: 1.8;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .6s ease .3s, transform .6s ease .3s;
+    }
+    .rev-footer-copy.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 620px) {
+      .range-row { gap: 8px; }
+      .rp-tag { font-size: 10px; }
+      .stream-item { grid-template-columns: 130px 1fr 36px; gap: 12px; }
+      .revenue-section { padding: 80px 20px 100px; }
+      .rev-callout { grid-template-columns: 1fr; grid-template-rows: 1fr 1px 1fr; }
+      .callout-vdiv { height: 1px; width: auto; }
+      .callout-panel { padding: 36px 28px; }
+    }
+
+    /* ═══════════════════════════════
+       COMPARISON SECTION
+    ═══════════════════════════════ */
+    .compare-section {
+      background: var(--bg);
+      padding: 120px 24px 140px;
+    }
+
+    .compare-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .compare-header {
+      text-align: center;
+      margin-bottom: 72px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .compare-header.visible { opacity: 1; transform: translateY(0); }
+
+    .compare-header h2 {
+      font-size: clamp(32px, 5.2vw, 54px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.02em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .compare-header p {
+      font-size: clamp(15px, 1.9vw, 18px);
+      font-weight: 300;
+      color: var(--text-sub);
+    }
+
+    /* Table wrapper */
+    .compare-table-wrap {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .65s ease .1s, transform .65s ease .1s;
+    }
+    .compare-table-wrap.visible { opacity: 1; transform: translateY(0); }
+
+    /* Column headers */
+    .compare-cols {
+      display: grid;
+      grid-template-columns: 160px repeat(3, 1fr);
+      gap: 0;
+      margin-bottom: 0;
+    }
+
+    .col-head {
+      padding: 20px 16px 18px;
+      text-align: center;
+      border-radius: 14px 14px 0 0;
+    }
+    .col-head:first-child {
+      background: transparent;
+    }
+    .col-head.c-restaurant { background: rgba(30,30,44,.04); }
+    .col-head.c-cvs        { background: rgba(30,30,44,.04); }
+    .col-head.c-yeopkupon  {
+      background: var(--accent);
+      position: relative;
+    }
+    .col-head.c-yeopkupon::after {
+      content: '추천';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    .col-name {
+      font-size: clamp(13px, 1.6vw, 15px);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .col-head.c-yeopkupon .col-name { color: #fff; }
+
+    .col-emoji {
+      font-size: 20px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* Rows */
+    .compare-rows {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cmp-row {
+      display: grid;
+      grid-template-columns: 160px repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px solid rgba(30,30,44,.07);
+    }
+    .cmp-row:last-child {
+      border-bottom: 1px solid rgba(30,30,44,.07);
+    }
+
+    .cmp-cell {
+      padding: 20px 16px;
+      text-align: center;
+      font-size: clamp(12px, 1.4vw, 14px);
+      color: var(--text);
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.45;
+    }
+    .cmp-cell.row-label {
+      justify-content: flex-start;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-align: left;
+    }
+
+    /* Column backgrounds */
+    .cmp-cell.c-restaurant,
+    .cmp-cell.c-cvs {
+      background: rgba(30,30,44,.02);
+      color: rgba(30,30,44,.65);
+    }
+    .cmp-cell.c-yeopkupon {
+      background: rgba(30,30,44,.05);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Rating dots */
+    .rating {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+    }
+    .dot-r {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(30,30,44,.12);
+    }
+    .dot-r.on { background: var(--accent); }
+    .dot-r.on-good { background: #1e1e2c; }
+
+    /* Badge chips inside cells */
+    .chip {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .chip-bad  { background: rgba(30,30,44,.07);  color: rgba(30,30,44,.55); }
+    .chip-mid  { background: rgba(30,30,44,.1);   color: rgba(30,30,44,.7); }
+    .chip-good { background: rgba(30,30,44,.12); color: var(--accent); }
+
+    @media (max-width: 640px) {
+      .compare-section { padding: 80px 20px 100px; }
+
+      /* 헤더: 빈 첫 칸 숨기고 3-컬럼 */
+      .compare-cols { grid-template-columns: repeat(3, 1fr); }
+      .compare-cols .col-head:first-child { display: none; }
+      .col-name { font-size: 12px; }
+      .col-emoji { font-size: 16px; }
+      .col-head { padding: 16px 8px 14px; }
+
+      /* 행: 레이블 전체폭 + 3개 브랜드 셀 아래 */
+      .cmp-row {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto auto;
+      }
+      .cmp-cell.row-label {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        justify-content: center;
+        text-align: center;
+        font-size: 10px;
+        padding: 9px 12px 7px;
+        background: rgba(30,30,44,.03);
+        border-bottom: 1px solid rgba(30,30,44,.06);
+      }
+      .cmp-cell.c-restaurant { grid-column: 1; grid-row: 2; }
+      .cmp-cell.c-cvs        { grid-column: 2; grid-row: 2; }
+      .cmp-cell.c-yeopkupon  { grid-column: 3; grid-row: 2; }
+      .cmp-cell {
+        padding: 12px 6px;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .chip { font-size: 10px; padding: 3px 7px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SUCCESS STORIES SECTION
+    ═══════════════════════════════════════ */
+    .stories-section {
+      padding: 120px 24px 140px;
+      background: #1e1e2c;
+      position: relative;
+      overflow: hidden;
+    }
+    .stories-bg-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 50% -5%, rgba(30,30,44,.14) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 85% 105%, rgba(30,30,44,.07) 0%, transparent 60%);
+    }
+    .stories-inner {
+      max-width: 1060px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .stories-header {
+      text-align: center;
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .stories-header.visible { opacity: 1; transform: none; }
+    .stories-header h2 {
+      font-size: clamp(32px, 5.5vw, 54px);
+      font-weight: 700;
+      color: #f5f5f5;
+      letter-spacing: -.02em;
+      line-height: 1.22;
+      margin-bottom: 14px;
+    }
+    .stories-header p {
+      font-size: clamp(15px, 1.9vw, 18px);
+      font-weight: 300;
+      color: rgba(245,245,245,.38);
+      line-height: 1.75;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .video-card {
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.07);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease,
+                  box-shadow .3s ease, border-color .3s ease;
+      text-decoration: none;
+      display: block;
+    }
+    .video-card:nth-child(2) { transition-delay: .1s; }
+    .video-card:nth-child(3) { transition-delay: .2s; }
+    .video-card.visible { opacity: 1; transform: none; }
+    .video-card:hover {
+      box-shadow: 0 16px 56px rgba(0,0,0,.45);
+      border-color: rgba(30,30,44,.35);
+    }
+
+    .video-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+    .thumb-fill {
+      position: absolute;
+      inset: 0;
+    }
+    .video-card:nth-child(1) .thumb-fill {
+      background: linear-gradient(148deg, #0f0f0f 0%, #181818 55%, #101010 100%);
+    }
+    .video-card:nth-child(2) .thumb-fill {
+      background: linear-gradient(148deg, #0e0e0e 0%, #161616 50%, #181818 100%);
+    }
+    .video-card:nth-child(3) .thumb-fill {
+      background: linear-gradient(148deg, #0e0e0e 0%, #181818 50%, #141414 100%);
+    }
+    .thumb-glow {
+      position: absolute;
+      bottom: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 80%;
+      background: radial-gradient(ellipse at center, rgba(30,30,44,.3) 0%, transparent 70%);
+      filter: blur(22px);
+    }
+    .thumb-num {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -60%);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(60px, 9vw, 92px);
+      color: rgba(255,255,255,.045);
+      letter-spacing: -.02em;
+      pointer-events: none;
+      user-select: none;
+    }
+    .play-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(255,255,255,.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .28s ease, background .28s ease, border-color .28s ease;
+    }
+    .play-btn::after {
+      content: '';
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 9px 0 9px 18px;
+      border-color: transparent transparent transparent rgba(255,255,255,.88);
+      margin-left: 4px;
+    }
+    .video-card:hover .play-btn {
+      transform: translate(-50%, -50%) scale(1.12);
+      background: rgba(30,30,44,.72);
+      border-color: rgba(30,30,44,.5);
+    }
+    .yt-badge {
+      position: absolute;
+      bottom: 10px; right: 10px;
+      background: rgba(0,0,0,.62);
+      border-radius: 4px;
+      padding: 3px 8px 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,.8);
+      letter-spacing: .05em;
+    }
+    .duration-badge {
+      position: absolute;
+      bottom: 10px; left: 10px;
+      background: rgba(0,0,0,.62);
+      border-radius: 4px;
+      padding: 3px 8px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,.65);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: .06em;
+    }
+    .thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .video-card:hover .thumb-img {
+      transform: scale(1.04);
+    }
+
+    .video-body {
+      padding: 22px 22px 24px;
+    }
+    .video-num {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: .28em;
+      margin-bottom: 9px;
+      opacity: .7;
+    }
+    .video-title {
+      font-size: clamp(15px, 1.7vw, 17px);
+      font-weight: 600;
+      color: #f0f0f0;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      word-break: keep-all;
+    }
+    .video-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(245,245,245,.28);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: color .22s ease;
+    }
+    .video-cta-arrow {
+      display: inline-block;
+      transition: transform .22s ease;
+    }
+    .video-card:hover .video-cta { color: var(--accent); }
+    .video-card:hover .video-cta-arrow { transform: translateX(4px); }
+
+    @media (max-width: 760px) {
+      .stories-section { padding: 80px 20px 100px; }
+      .video-grid { grid-template-columns: 1fr; gap: 16px; }
+      .video-card:nth-child(2),
+      .video-card:nth-child(3) { transition-delay: .05s; }
+    }
+
+    /* ── 다크 섹션 오버라이드 ── */
+    .stories-section .section-tag,
+    .stories-section .video-num,
+    .stories-section .video-cta { color: rgba(255,255,255,.45); }
+    .stories-section .video-title { color: rgba(255,255,255,.88); }
+    .stories-section .video-card:hover .video-cta { color: rgba(255,255,255,.82); }
+
+    .rev-callout .callout-micro { color: rgba(226,213,195,.5); }
+    .meeting-callout .callout-eyebrow { color: rgba(226,213,195,.5); }
+    .cost-extra .extra-tag  { color: rgba(226,213,195,.5); }
+    .cost-extra .extra-title { color: #e2d5c3; }
+    .cost-extra .extra-desc { color: rgba(226,213,195,.65); }
+
+    .np-check {
+      background: rgba(226,213,195,.08);
+      border: 1px solid rgba(226,213,195,.22);
+      color: rgba(226,213,195,.75);
+    }
+    .np-tag { color: rgba(226,213,195,.55); }
+
+    .yt-badge { background: rgba(255,255,255,.12); color: rgba(255,255,255,.75); }
+
+    .step-circle { background: #1e1e2c; color: #ffffff; border: 1px solid rgba(30,30,44,.15); }
+
+    /* ═══════════════════════════════════════
+       COST SECTION
+    ═══════════════════════════════════════ */
+    .cost-section {
+      padding: 120px 24px 140px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .cost-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(30,30,44,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cost-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .cost-header {
+      text-align: center;
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .cost-header.visible { opacity: 1; transform: none; }
+    .cost-header h2 {
+      font-size: clamp(34px, 5.8vw, 56px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.01em;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .cost-header p {
+      font-size: clamp(15px, 1.9vw, 18px);
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+
+    /* Receipt card */
+    .cost-receipt {
+      background: #fff;
+      border: 1px solid var(--sep);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 32px rgba(30,30,44,.06);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .cost-receipt.visible { opacity: 1; transform: none; }
+
+    .receipt-top {
+      padding: 28px 32px 20px;
+      border-bottom: 1px dashed var(--sep);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .receipt-brand {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      color: var(--accent);
+    }
+    .receipt-limit {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      background: rgba(30,30,44,.09);
+      border: 1px solid rgba(30,30,44,.2);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: .06em;
+    }
+    .receipt-limit-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: blink 1.1s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .25; }
+    }
+
+    .receipt-lines {
+      padding: 24px 32px;
+    }
+    .receipt-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--sep);
+      opacity: 0;
+      transform: translateX(-16px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .receipt-line:last-child { border-bottom: none; }
+    .receipt-line.visible { opacity: 1; transform: none; }
+    .rl-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-sub);
+      letter-spacing: .02em;
+    }
+    .rl-original {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      margin-right: 10px;
+    }
+    .rl-val {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(22px, 3.5vw, 30px);
+      letter-spacing: .04em;
+      color: var(--text);
+    }
+    .rl-val .accent { color: var(--accent); }
+
+    /* Total row */
+    .receipt-total {
+      padding: 20px 32px 28px;
+      border-top: 2px solid var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .receipt-total.visible { opacity: 1; transform: none; }
+    .rt-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: .04em;
+    }
+    .rt-val-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .rt-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .rt-val {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(38px, 7vw, 64px);
+      line-height: 1;
+      letter-spacing: .02em;
+      color: var(--text);
+    }
+
+    /* Scramble number: gradient sits here so restore after animation works */
+    .scramble-wrap {
+      display: inline-block;
+      position: relative;
+      background: linear-gradient(135deg, #1e1e2c 0%, #3d2a1e 40%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .scramble-char {
+      display: inline-block;
+      /* 부모 rt-val의 transparent text-fill 상속을 막아 문자가 보이게 함 */
+      -webkit-text-fill-color: var(--text);
+      color: var(--text);
+    }
+
+    /* Conversion benefit card */
+    .cost-extra {
+      background: #1e1e2c;
+      border-radius: 20px;
+      padding: 36px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0;
+      overflow: hidden;
+      box-shadow: inset 0 2px 0 0 rgba(255,255,255,.12);
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .cost-extra.visible { opacity: 1; transform: none; }
+
+    .extra-panel {
+      padding: 0 28px;
+    }
+    .extra-panel:first-child { padding-left: 0; }
+    .extra-panel:last-child  { padding-right: 0; }
+
+    .extra-sep {
+      width: 1px;
+      background: rgba(255,255,255,.1);
+      align-self: stretch;
+    }
+
+    .extra-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .extra-title {
+      font-size: clamp(15px, 2.2vw, 18px);
+      font-weight: 700;
+      color: #f5f5f5;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .extra-desc {
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(245,245,245,.4);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      .cost-receipt { border-radius: 14px; }
+      .receipt-top  { padding: 20px 20px 16px; flex-wrap: wrap; }
+      .receipt-lines { padding: 16px 20px; }
+      .receipt-total { padding: 16px 20px 22px; }
+      .cost-extra {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1px auto;
+      }
+      .extra-sep { width: auto; height: 1px; margin: 20px 0; }
+      .extra-panel { padding: 0; }
+    }
+
+    /* ═══════════════════════════════════════
+       MEETING SECTION
+    ═══════════════════════════════════════ */
+    .meeting-section {
+      padding: 120px 24px 140px;
+      background: #ffffff;
+    }
+    .meeting-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .meeting-header {
+      text-align: center;
+      margin-bottom: 72px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .meeting-header.visible { opacity: 1; transform: none; }
+    .meeting-header h2 {
+      font-size: clamp(32px, 5.5vw, 54px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.02em;
+      line-height: 1.22;
+      margin-bottom: 14px;
+    }
+    .meeting-header p {
+      font-size: clamp(15px, 1.9vw, 18px);
+      font-weight: 300;
+      color: var(--text-sub);
+    }
+    .duration-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 22px;
+      padding: 9px 22px;
+      border-radius: 100px;
+      background: rgba(30,30,44,.04);
+      border: 1px solid rgba(30,30,44,.1);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-sub);
+      letter-spacing: .04em;
+    }
+    .duration-icon { font-size: 14px; }
+
+    /* Vertical steps timeline */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      max-width: 620px;
+      margin: 0 auto 40px;
+    }
+    .step-item {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0 24px;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .step-item.visible { opacity: 1; transform: none; }
+
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .step-circle {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: #1e1e2c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 20px;
+      color: #f5f5f5;
+      letter-spacing: .04em;
+    }
+    .step-connector {
+      width: 1px;
+      flex: 1;
+      min-height: 28px;
+      background: linear-gradient(to bottom, rgba(30,30,44,.18), rgba(30,30,44,.05));
+      margin: 10px 0;
+    }
+    .step-item:last-child .step-connector { display: none; }
+
+    .step-content {
+      padding-top: 8px;
+      padding-bottom: 44px;
+    }
+    .step-item:last-child .step-content { padding-bottom: 0; }
+
+    .step-title {
+      font-size: clamp(15px, 1.9vw, 18px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.01em;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .step-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-sub);
+      line-height: 1.78;
+      margin-bottom: 12px;
+      word-break: keep-all;
+    }
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(30,30,44,.3);
+      background: rgba(30,30,44,.07);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: .08em;
+    }
+
+    /* Bottom callout */
+    .meeting-callout {
+      background: #1e1e2c;
+      border-radius: 20px;
+      padding: 44px 52px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 40px;
+      box-shadow: inset 0 2px 0 0 rgba(255,255,255,.12);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .65s ease .12s, transform .65s ease .12s;
+    }
+    .meeting-callout.visible { opacity: 1; transform: none; }
+
+    .callout-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .24em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .callout-headline {
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 700;
+      color: #e2d5c3;
+      letter-spacing: -.01em;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .callout-body {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(226,213,195,.65);
+      line-height: 1.75;
+    }
+
+    .np-tags {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .np-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 20px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.04);
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(245,245,245,.5);
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .np-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(30,30,44,.2);
+      border: 1px solid rgba(30,30,44,.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 9px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    @media (max-width: 700px) {
+      .meeting-section { padding: 80px 20px 100px; }
+      .step-content { padding-bottom: 36px; }
+      .meeting-callout {
+        grid-template-columns: 1fr;
+        padding: 32px 28px;
+        gap: 28px;
+      }
+      .np-tags { flex-direction: row; flex-wrap: wrap; }
+    }
+
+    /* ── 자동 생성 헤딩 앵커 링크 차단 ── */
+    h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a { display: none !important; }
+    .anchor, .header-anchor, .heading-anchor, [class*="anchor-link"] { display: none !important; }
+    h1 > a::before, h1 > a::after,
+    h2 > a::before, h2 > a::after,
+    h3 > a::before, h3 > a::after { display: none !important; }
+    h1, h2, h3, h4, h5, h6 { position: static; }
+  </style>
+</head>
+<body>
+
+<!-- Film grain (paper texture feel) -->
+<div class="grain"></div>
+
+<section class="hero">
+
+  <!-- Atmosphere -->
+  <div class="atmo"></div>
+
+  <!-- Warp rings -->
+  <div class="warp-rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+
+  <!-- Badge -->
+  <div class="badge">
+    <span class="badge-dot"></span>
+    옆커폰 창업 가이드북 2025
+  </div>
+
+  <!-- Pre-header -->
+  <p class="pre-header">미팅 전, 솔직하게 알려드립니다.</p>
+
+  <!-- ★ COSMIC 700 BLOCK ★ -->
+  <div class="cosmic-block">
+    <p class="nation-tag">전&nbsp;&nbsp;국</p>
+    <div class="number-wrap">
+      <div class="number-glow"></div>
+      <div class="hero-num" id="hero-num">0</div>
+    </div>
+    <p class="milestone-label">호점&nbsp;돌파</p>
+  </div>
+
+  <!-- Tagline -->
+  <p class="tagline">
+    어떤 사업이든 믿을 수 있어야 결정할 수 있습니다.<br />
+    궁금하신 것들, 숨기지 않고 먼저 꺼내 드릴게요.
+  </p>
+
+  <!-- Vertical rule -->
+  <div class="rule"></div>
+
+  <!-- Stats row -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val"><span id="sv1">0</span>만<span class="accent">+</span></div>
+      <div class="stat-lbl">전국 월 평균 매출</div>
+    </div>
+
+    <div class="stat-sep"></div>
+
+    <div class="stat">
+      <div class="stat-val"><span id="sv2">0</span>만<span class="accent">+</span></div>
+      <div class="stat-lbl">데이터 기반 누적 상담건</div>
+    </div>
+
+    <div class="stat-sep"></div>
+
+    <div class="stat">
+      <div class="stat-val"><span id="sv3">0</span>만<span class="accent">+</span></div>
+      <div class="stat-lbl">커뮤니티 잠재고객</div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="scroll-hint">
+    <span class="scroll-label">scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+
+</section>
+
+<!-- ★ FAQ SECTION ★ -->
+<section class="faq-section">
+
+  <div class="faq-header" id="faq-header">
+    <span class="section-tag">FAQ</span>
+    <h2>자주 묻는 질문</h2>
+    <p>미팅 전, 가장 많이 물어보시는 질문들을 먼저 정리했습니다.</p>
+  </div>
+
+  <div class="faq-grid">
+
+    <!-- Q1 -->
+    <div class="faq-card" id="faq-1">
+      <div class="faq-num">Q 01</div>
+      <p class="faq-q">휴대폰 판매 경험이 없어도 할 수 있나요?</p>
+      <div class="faq-a-wrap">
+        <span class="faq-a"
+          data-stream="전혀 문제없습니다. 매출이 실제로 발생하고 있는 매장에서 직접 실습하는 옆커폰만의 현장 교육 시스템이 준비되어 있습니다. 판매부터 고객 응대까지 실전 경험을 쌓을 수 있으며, 본사 슈퍼바이저가 운영이 안정화될 때까지 1:1로 함께합니다. 실제로 저희 가맹점주 중 상당수가 판매 경험 없이 시작하셨습니다."
+        ></span><span class="faq-cursor"></span>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="faq-card" id="faq-2">
+      <div class="faq-num">Q 02</div>
+      <p class="faq-q">미팅은 어떻게 진행되나요? 계약 압박 있나요?</p>
+      <div class="faq-a-wrap">
+        <span class="faq-a"
+          data-stream="이 가이드북을 먼저 드린 이유가 있습니다. 저희 미팅은 일방적인 설명이 아니라, 상담자분의 상황을 충분히 듣는 자리입니다. 실제 매장 운영 데이터와 수익 구조를 투명하게 공유드리며, 당일 계약을 요구하는 일은 없습니다. 결정은 언제나 상담자분의 몫입니다."
+        ></span><span class="faq-cursor"></span>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="faq-card" id="faq-3">
+      <div class="faq-num">Q 03</div>
+      <p class="faq-q">일반 통신사 대리점·판매점과 뭐가 다른가요?</p>
+      <div class="faq-a-wrap">
+        <span class="faq-a"
+          data-stream="일반 대리점·판매점은 단일 통신사에 묶여 있지만, 옆커폰은 SK·KT·LG 3사를 모두 취급합니다. 고객에게 가장 유리한 조건을 직접 비교해 제안할 수 있어 성사율이 훨씬 높습니다. 여기에 유튜브·네이버 카페·인스타그램 등 128만+ 팔로워 규모의 커뮤니티를 통해 본사가 마케팅을 직접 지원합니다. 별도 홍보 비용 없이 고객이 먼저 찾아오는 구조입니다."
+        ></span><span class="faq-cursor"></span>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="faq-card" id="faq-4">
+      <div class="faq-num">Q 04</div>
+      <p class="faq-q">미팅은 어떻게 진행되나요?</p>
+      <div class="faq-a-wrap">
+        <span class="faq-a"
+          data-stream="약 30분~1시간의 정보 공유 미팅으로 진행됩니다. 창업 비용, 해당 지역 상권 분석, 예상 수익 구조 등 실제 데이터를 그대로 공유드립니다. 궁금하신 사항은 Q&A로 모두 답변드리며, 계약을 강요하거나 당일 결정을 요구하는 일은 없습니다. 미팅 후 천천히 검토하고 결정하셔도 됩니다."
+        ></span><span class="faq-cursor"></span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ★ REVENUE SECTION ★ -->
+<section class="revenue-section">
+  <div class="rev-inner">
+
+    <!-- Header -->
+    <div class="rev-header" id="rev-header">
+      <span class="section-tag">실적 공개</span>
+      <h2>전국 가맹점<br />실제 매출 데이터</h2>
+      <p class="rev-disclaimer">
+        기대치가 아닙니다.<br />
+        <strong>2026년 4월 기준</strong>, 전국 가맹점이 실제로 달성한 수치입니다.
+      </p>
+    </div>
+
+    <!-- Min / Avg / Max range -->
+    <div class="range-row" id="rev-range">
+
+      <div class="rp rp-min">
+        <p class="rp-tag">경기 C점<br />월 최저</p>
+        <p class="rp-num"><span id="rev-min">0</span></p>
+        <p class="rp-won">만원 / 월</p>
+        <div class="rp-dot"></div>
+      </div>
+
+      <div class="rp rp-avg">
+        <p class="rp-tag">전국 가맹점<br />평균 매출</p>
+        <p class="rp-num"><span id="rev-avg">0</span></p>
+        <p class="rp-won">만원 / 월</p>
+        <div class="rp-dot"></div>
+      </div>
+
+      <div class="rp rp-max">
+        <p class="rp-tag">인천 B점<br />월 최고</p>
+        <p class="rp-num"><span id="rev-max">0</span></p>
+        <p class="rp-won">만원 / 월</p>
+        <div class="rp-dot"></div>
+      </div>
+
+    </div>
+
+    <!-- Revenue structure -->
+    <div class="rev-structure" id="rev-structure">
+      <p class="rev-structure-title">수익 구조</p>
+      <div class="stream-list">
+
+        <div class="stream-item">
+          <div>
+            <span class="stream-name">판매 수수료</span>
+          </div>
+          <div class="stream-bar-bg">
+            <div class="stream-bar-fill" data-pct="50"></div>
+          </div>
+          <span class="stream-pct">50%</span>
+        </div>
+
+        <div class="stream-item">
+          <div>
+            <span class="stream-name">요금 수수료</span>
+            <span class="stream-sub">요금제 리베이트</span>
+          </div>
+          <div class="stream-bar-bg">
+            <div class="stream-bar-fill" data-pct="30"></div>
+          </div>
+          <span class="stream-pct">30%</span>
+        </div>
+
+        <div class="stream-item">
+          <div>
+            <span class="stream-name">부가 수익</span>
+            <span class="stream-sub">정수기 · 인터넷 · 렌탈</span>
+          </div>
+          <div class="stream-bar-bg">
+            <div class="stream-bar-fill" data-pct="20"></div>
+          </div>
+          <span class="stream-pct">20%</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Callout -->
+    <div class="rev-callout" id="rev-callout">
+
+      <div class="callout-panel left">
+        <span class="callout-micro">Daily Average</span>
+        <div class="callout-main-num">2~3건</div>
+        <p class="callout-desc">하루 평균 상담 건수만으로<br />충분한 수익을 만들 수 있습니다.</p>
+      </div>
+
+      <div class="callout-vdiv"></div>
+
+      <div class="callout-panel right">
+        <span class="callout-micro">Monthly Maximum</span>
+        <div class="callout-main-num">5,000만</div>
+        <p class="callout-desc">실제 가맹점주가 달성한<br />월 최대 수익입니다.</p>
+      </div>
+
+    </div>
+
+    <!-- Footer copy -->
+    <p class="rev-footer-copy" id="rev-footer">
+      고객이 먼저 찾아오는 구조,<br />이미 완성되어 있습니다.
+    </p>
+
+  </div>
+</section>
+
+<!-- ★ COMPARISON SECTION ★ -->
+<section class="compare-section">
+  <div class="compare-inner">
+
+    <div class="compare-header" id="cmp-header">
+      <span class="section-tag">업종 비교</span>
+      <h2>왜 옆커폰인가</h2>
+      <p>같은 창업, 다른 구조 — 숫자로 비교해드립니다.</p>
+    </div>
+
+    <div class="compare-table-wrap" id="cmp-table">
+
+      <!-- Column headers -->
+      <div class="compare-cols">
+        <div class="col-head"></div>
+        <div class="col-head c-restaurant">
+          <span class="col-emoji">🍽️</span>
+          <div class="col-name">요식업</div>
+        </div>
+        <div class="col-head c-cvs">
+          <span class="col-emoji">🏪</span>
+          <div class="col-name">편의점</div>
+        </div>
+        <div class="col-head c-yeopkupon">
+          <span class="col-emoji" style="filter:brightness(10)">📱</span>
+          <div class="col-name">옆커폰</div>
+        </div>
+      </div>
+
+      <!-- Rows -->
+      <div class="compare-rows">
+
+        <!-- 초기비용 -->
+        <div class="cmp-row">
+          <div class="cmp-cell row-label">초기 비용</div>
+          <div class="cmp-cell c-restaurant">1억~3억+</div>
+          <div class="cmp-cell c-cvs">8,000만~1.5억</div>
+          <div class="cmp-cell c-yeopkupon">700만 ~ 1,200만 수준</div>
+        </div>
+
+        <!-- 필요 인원 -->
+        <div class="cmp-row">
+          <div class="cmp-cell row-label">필요 인원</div>
+          <div class="cmp-cell c-restaurant">주방·홀 최소 3~5인</div>
+          <div class="cmp-cell c-cvs">교대 포함 2~4인</div>
+          <div class="cmp-cell c-yeopkupon">1인 운영 가능</div>
+        </div>
+
+        <!-- 재고 부담 -->
+        <div class="cmp-row">
+          <div class="cmp-cell row-label">재고 부담</div>
+          <div class="cmp-cell c-restaurant">
+            <div class="rating">
+              <div class="dot-r on-good"></div><div class="dot-r on-good"></div>
+              <div class="dot-r on-good"></div><div class="dot-r on-good"></div><div class="dot-r on-good"></div>
+            </div>
+          </div>
+          <div class="cmp-cell c-cvs">
+            <div class="rating">
+              <div class="dot-r on-good"></div><div class="dot-r on-good"></div>
+              <div class="dot-r on-good"></div><div class="dot-r on-good"></div><div class="dot-r"></div>
+            </div>
+          </div>
+          <div class="cmp-cell c-yeopkupon">
+            <div class="rating">
+              <div class="dot-r on"></div><div class="dot-r"></div>
+              <div class="dot-r"></div><div class="dot-r"></div><div class="dot-r"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 마케팅 -->
+        <div class="cmp-row">
+          <div class="cmp-cell row-label">마케팅</div>
+          <div class="cmp-cell c-restaurant"><span class="chip chip-bad">점주 직접 부담</span></div>
+          <div class="cmp-cell c-cvs"><span class="chip chip-mid">본사 일부 지원</span></div>
+          <div class="cmp-cell c-yeopkupon"><span class="chip chip-good">본사 전담 운영</span></div>
+        </div>
+
+        <!-- 고객 유입 -->
+        <div class="cmp-row">
+          <div class="cmp-cell row-label">고객 유입</div>
+          <div class="cmp-cell c-restaurant"><span class="chip chip-bad">직접 확보 필요</span></div>
+          <div class="cmp-cell c-cvs"><span class="chip chip-mid">입지 의존도 높음</span></div>
+          <div class="cmp-cell c-yeopkupon" style="flex-direction:column;gap:6px;">
+            <span class="chip chip-good">브랜드가 불러옴</span>
+            <span style="font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.02em;">커뮤니티 127만 명</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ★ SUCCESS STORIES SECTION ★ -->
+<section class="stories-section">
+  <div class="stories-bg-glow"></div>
+  <div class="stories-inner">
+
+    <div class="stories-header" id="stories-header">
+      <span class="section-tag">점주 인터뷰</span>
+      <h2>직접 들어보세요</h2>
+      <p>말로 설명하는 것보다,<br />실제 점주님들의 이야기가 더 정직합니다.</p>
+    </div>
+
+    <div class="video-grid">
+
+      <!-- Card 1 -->
+      <a class="video-card" href="https://www.youtube.com/watch?v=zEKyXljduE4" target="_blank" rel="noopener" id="vc-1">
+        <div class="video-thumb">
+          <img class="thumb-img" src="https://img.youtube.com/vi/zEKyXljduE4/maxresdefault.jpg" alt="남들은 폐업할 때 매장 4개로 늘렸습니다" />
+          <div class="thumb-glow"></div>
+          <div class="play-btn"></div>
+          <span class="yt-badge">YouTube</span>
+        </div>
+        <div class="video-body">
+          <div class="video-num">INTERVIEW 01</div>
+          <p class="video-title">남들은 폐업할 때,<br />매장 4개로 늘렸습니다.</p>
+          <span class="video-cta">영상 보기 <span class="video-cta-arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a class="video-card" href="https://www.youtube.com/watch?v=oYW-0UT0sBE" target="_blank" rel="noopener" id="vc-2">
+        <div class="video-thumb">
+          <img class="thumb-img" src="https://img.youtube.com/vi/oYW-0UT0sBE/maxresdefault.jpg" alt="15년차 학원 원장이었던 제가 본사 교육만으로 매장 3개를 운영합니다" />
+          <div class="thumb-glow"></div>
+          <div class="play-btn"></div>
+          <span class="yt-badge">YouTube</span>
+        </div>
+        <div class="video-body">
+          <div class="video-num">INTERVIEW 02</div>
+          <p class="video-title">15년차 학원 원장이었던 제가<br />본사 교육만으로 매장 3개를 운영합니다.</p>
+          <span class="video-cta">영상 보기 <span class="video-cta-arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a class="video-card" href="https://www.youtube.com/watch?v=4qXWxz9tIF4" target="_blank" rel="noopener" id="vc-3">
+        <div class="video-thumb">
+          <img class="thumb-img" src="https://img.youtube.com/vi/4qXWxz9tIF4/maxresdefault.jpg" alt="사고로 생긴 1억 빚 00개월 만에 다 갚았습니다" />
+          <div class="thumb-glow"></div>
+          <div class="play-btn"></div>
+          <span class="yt-badge">YouTube</span>
+        </div>
+        <div class="video-body">
+          <div class="video-num">INTERVIEW 03</div>
+          <p class="video-title">사고로 생긴 1억 빚,<br />00개월 만에 다 갚았습니다.</p>
+          <span class="video-cta">영상 보기 <span class="video-cta-arrow">→</span></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ★ COST SECTION ★ -->
+<section class="cost-section">
+  <div class="cost-inner">
+
+    <div class="cost-header" id="cost-header">
+      <span class="section-tag">창업 비용</span>
+      <h2>단 700만 원으로<br />시작할 수 있습니다</h2>
+      <p>가맹비 + 교육비, 두 항목을 합산한 특별 혜택가입니다.<br />이 조건은 1,000호점 달성 전까지만 유지됩니다.</p>
+    </div>
+
+    <!-- Receipt card -->
+    <div class="cost-receipt" id="cost-receipt">
+
+      <div class="receipt-top">
+        <span class="receipt-brand">옆커폰 창업 비용 명세서</span>
+        <span class="receipt-limit">
+          <span class="receipt-limit-dot"></span>
+          1,000호점 한정 · 선착순
+        </span>
+      </div>
+
+      <div class="receipt-lines">
+        <div class="receipt-line" id="rl-1">
+          <span class="rl-label">가맹비</span>
+          <div>
+            <span class="rl-original">2,200만 원</span>
+            <span class="rl-val">1,700 <span class="accent">할인</span></span>
+          </div>
+        </div>
+        <div class="receipt-line" id="rl-2">
+          <span class="rl-label">교육비</span>
+          <div>
+            <span class="rl-original">1,100만 원</span>
+            <span class="rl-val">900 <span class="accent">할인</span></span>
+          </div>
+        </div>
+        <div class="receipt-line" id="rl-3">
+          <span class="rl-label">기타 초기비용 (인테리어·집기 등)</span>
+          <div>
+            <span class="rl-val">별도 협의</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="receipt-total" id="cost-total">
+        <span class="rt-label">가맹비 + 교육비 합산</span>
+        <div class="rt-val-wrap">
+          <span class="rt-sub">특별 혜택가</span>
+          <span class="rt-val">
+            <span class="scramble-wrap" id="scramble-700">700</span>만 원
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Conversion benefit card -->
+    <div class="cost-extra" id="cost-extra">
+      <div class="extra-panel">
+        <div class="extra-tag">동종업계 전환 혜택</div>
+        <div class="extra-title">더 저렴하게<br />창업할 수 있습니다</div>
+        <div class="extra-desc">통신 업계 경력자라면<br />개별 면제 혜택이 추가로 적용되어<br />700만 원보다 낮은 비용으로 시작 가능합니다.</div>
+      </div>
+      <div class="extra-sep"></div>
+      <div class="extra-panel">
+        <div class="extra-tag">자세한 내용은</div>
+        <div class="extra-title">미팅에서<br />직접 안내드립니다</div>
+        <div class="extra-desc">개인 상황에 따라 면제 항목과 금액이 달라집니다.<br />상담 신청 이후 미팅 일정을 잡아드리겠습니다.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ★ MEETING SECTION ★ -->
+<section class="meeting-section">
+  <div class="meeting-inner">
+
+    <div class="meeting-header" id="meeting-header">
+      <span class="section-tag">미팅 프로세스</span>
+      <h2>한 번의 미팅으로<br />모든 걸 확인하세요</h2>
+      <p>투명하게 보여드립니다. 결정은 천천히 하셔도 됩니다.</p>
+      <div class="duration-pill">
+        <span class="duration-icon">⏱</span>
+        소요 시간 약 30분 ~ 1시간
+      </div>
+    </div>
+
+    <div class="steps-list" id="steps-list">
+
+      <div class="step-item" id="step-1">
+        <div class="step-left">
+          <div class="step-circle">1</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">창업 비용 안내</div>
+          <p class="step-desc">가맹비, 교육비, 초기 비용 등 실제 수치를 그대로 공유합니다. 숨겨진 비용은 없습니다.</p>
+          <span class="step-badge">계약 의무 없음</span>
+        </div>
+      </div>
+
+      <div class="step-item" id="step-2">
+        <div class="step-left">
+          <div class="step-circle">2</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">지역 상권 분석 공유</div>
+          <p class="step-desc">관심 지역의 상권 데이터를 사전에 분석해, 미팅 당일 자료를 직접 공유해드립니다.</p>
+        </div>
+      </div>
+
+      <div class="step-item" id="step-3">
+        <div class="step-left">
+          <div class="step-circle">3</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">수익 시뮬레이션 제시</div>
+          <p class="step-desc">실제 가맹점 수익 구조와 내 상황에 맞는 예상 수익을 구체적인 숫자로 보여드립니다.</p>
+        </div>
+      </div>
+
+      <div class="step-item" id="step-4">
+        <div class="step-left">
+          <div class="step-circle">4</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">궁금한 것 모두 Q&amp;A</div>
+          <p class="step-desc">이 가이드북에서 해소되지 않은 질문이 있다면 무엇이든 물어보세요.</p>
+          <span class="step-badge">당일 결정 불필요</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="meeting-callout" id="meeting-callout">
+      <div>
+        <div class="callout-eyebrow">미팅의 목적</div>
+        <div class="callout-headline">정보를 투명하게<br />드리는 것입니다</div>
+        <p class="callout-body">계약을 위한 자리가 아닙니다.<br />결정은 언제나 고객님의 몫입니다.</p>
+      </div>
+      <div class="np-tags">
+        <div class="np-tag"><span class="np-check">✓</span> 계약 의무 없음</div>
+        <div class="np-tag"><span class="np-check">✓</span> 당일 결정 불필요</div>
+        <div class="np-tag"><span class="np-check">✓</span> 계약 압박 없음</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+/* ─────────────────────────────────────────
+   COUNT-UP UTILITY
+───────────────────────────────────────── */
+function countUp(id, target, duration) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const t0 = performance.now();
+
+  function frame(now) {
+    const p = Math.min((now - t0) / duration, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(e * target).toLocaleString('ko-KR');
+    if (p < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ─────────────────────────────────────────
+   TRIGGER TIMINGS
+───────────────────────────────────────── */
+setTimeout(() => countUp('hero-num', 700, 1350), 1500);
+
+setTimeout(() => {
+  countUp('sv1', 2800, 1300);
+  countUp('sv2', 2400, 1500);
+  countUp('sv3',  128, 1100);
+}, 4000);
+
+
+/* ─────────────────────────────────────────
+   REVENUE SECTION — SCROLL ANIMATIONS
+───────────────────────────────────────── */
+(function () {
+  function revCountUp(id, target, duration, delay) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    setTimeout(() => {
+      const t0 = performance.now();
+      function frame(now) {
+        const p = Math.min((now - t0) / duration, 1);
+        const e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(e * target).toLocaleString('ko-KR');
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }, delay);
+  }
+
+  /* Range row: count up numbers when visible */
+  const rangeEl = document.getElementById('rev-range');
+  const rangeObs = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    rangeEl.classList.add('visible');
+    revCountUp('rev-min', 1690, 1200, 200);
+    revCountUp('rev-avg', 2800, 1400, 200);
+    revCountUp('rev-max', 5190, 1400, 200);
+    rangeObs.disconnect();
+  }, { threshold: 0.3 });
+  rangeObs.observe(rangeEl);
+
+  /* Revenue header */
+  const revHeader = document.getElementById('rev-header');
+  const rhObs = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    revHeader.classList.add('visible');
+    rhObs.disconnect();
+  }, { threshold: 0.4 });
+  rhObs.observe(revHeader);
+
+  /* Revenue structure bars */
+  const structureEl = document.getElementById('rev-structure');
+  const structObs = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    structureEl.classList.add('visible');
+    document.querySelectorAll('.stream-bar-fill').forEach((bar, i) => {
+      setTimeout(() => {
+        bar.style.width = bar.dataset.pct + '%';
+      }, i * 180 + 200);
+    });
+    structObs.disconnect();
+  }, { threshold: 0.3 });
+  structObs.observe(structureEl);
+
+  /* Callout + footer */
+  const calloutEl = document.getElementById('rev-callout');
+  const footerEl  = document.getElementById('rev-footer');
+  const callObs = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    calloutEl.classList.add('visible');
+    setTimeout(() => footerEl.classList.add('visible'), 200);
+    callObs.disconnect();
+  }, { threshold: 0.3 });
+  callObs.observe(calloutEl);
+})();
+
+
+/* ─────────────────────────────────────────
+   COMPARISON SECTION — SCROLL ANIMATIONS
+───────────────────────────────────────── */
+(function () {
+  function reveal(id, delay) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setTimeout(() => el.classList.add('visible'), delay);
+      obs.disconnect();
+    }, { threshold: 0.25 });
+    obs.observe(el);
+  }
+  reveal('cmp-header', 0);
+  reveal('cmp-table',  120);
+})();
+
+
+/* ─────────────────────────────────────────
+   FAQ — SCROLL-TRIGGERED TEXT STREAMING
+───────────────────────────────────────── */
+(function () {
+  /* 1) Header fade-in */
+  const header = document.getElementById('faq-header');
+  const headerObs = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      header.classList.add('visible');
+      headerObs.disconnect();
+    }
+  }, { threshold: 0.4 });
+  headerObs.observe(header);
+
+  /* 2) Card entrance + streaming */
+  const activeCards = document.querySelectorAll('.faq-card:not(.placeholder)');
+  const placeholders = document.querySelectorAll('.faq-card.placeholder');
+
+  function streamText(answerEl, cursorEl, fullText, charSpeed) {
+    let i = 0;
+    answerEl.textContent = '';
+
+    function tick() {
+      if (i < fullText.length) {
+        answerEl.textContent += fullText[i++];
+        setTimeout(tick, charSpeed);
+      } else {
+        cursorEl.classList.add('done');
+      }
+    }
+    tick();
+  }
+
+  const cardObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const card = entry.target;
+
+      /* Entrance animation */
+      const idx = Array.from(activeCards).indexOf(card);
+      setTimeout(() => card.classList.add('visible'), idx * 120);
+
+      /* Stream answer text */
+      const answerEl = card.querySelector('.faq-a[data-stream]');
+      const cursorEl = card.querySelector('.faq-cursor');
+      if (answerEl && cursorEl && !card.dataset.streamed) {
+        card.dataset.streamed = 'true';
+        const streamDelay = idx * 120 + 380;  /* start after card fades in */
+        setTimeout(
+          () => streamText(answerEl, cursorEl, answerEl.dataset.stream, 20),
+          streamDelay
+        );
+      }
+
+      cardObs.unobserve(card);
+    });
+  }, { threshold: 0.25 });
+
+  activeCards.forEach(c => cardObs.observe(c));
+
+  /* Placeholder cards: simple entrance only */
+  const phObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (!entry.isIntersecting) return;
+      setTimeout(() => entry.target.classList.add('visible'), i * 100 + 200);
+      phObs.unobserve(entry.target);
+    });
+  }, { threshold: 0.2 });
+
+  placeholders.forEach(c => phObs.observe(c));
+})();
+
+
+/* ─────────────────────────────────────────
+   SUCCESS STORIES — SCROLL ANIMATIONS
+───────────────────────────────────────── */
+(function () {
+  const header = document.getElementById('stories-header');
+  const hObs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    header.classList.add('visible');
+    hObs.disconnect();
+  }, { threshold: 0.35 });
+  hObs.observe(header);
+
+  const cards = document.querySelectorAll('.video-card');
+  const cardObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+      cardObs.unobserve(entry.target);
+    });
+  }, { threshold: 0.18 });
+  cards.forEach(c => cardObs.observe(c));
+})();
+
+
+/* ─────────────────────────────────────────
+   COST SECTION — SCRAMBLE + RECEIPT PRINT
+───────────────────────────────────────── */
+(function () {
+  const CHARS = '0123456789';
+
+  function scramble(el, finalText, duration) {
+    const chars = finalText.split('');
+    /* Wrap each character in a span */
+    el.innerHTML = chars.map((c, i) =>
+      `<span class="scramble-char" data-final="${c}" data-idx="${i}">${c}</span>`
+    ).join('');
+
+    const spans = el.querySelectorAll('.scramble-char');
+    const lockDelay = duration / chars.length; /* each char locks sequentially */
+
+    let lockedCount = 0;
+
+    spans.forEach((span, i) => {
+      const final = chars[i];
+      let frame = 0;
+      const shuffleCount = 10 + Math.floor(Math.random() * 8);
+
+      /* Rapid shuffle phase */
+      const interval = setInterval(() => {
+        span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+        frame++;
+        if (frame >= shuffleCount) clearInterval(interval);
+      }, 40);
+
+      /* Lock to final value after sequential delay */
+      setTimeout(() => {
+        clearInterval(interval);
+        span.textContent = final;
+        span.classList.add('locked');
+        lockedCount++;
+        /* 모든 문자 고정 후 plain text로 복원 → 부모 gradient 다시 적용 */
+        if (lockedCount === chars.length) {
+          setTimeout(() => { el.textContent = finalText; }, 280);
+        }
+      }, lockDelay * i + duration * .35);
+    });
+  }
+
+  /* Receipt line-by-line reveal */
+  function printLines() {
+    const lines = ['rl-1', 'rl-2', 'rl-3'];
+    lines.forEach((id, i) => {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('visible');
+      }, i * 320 + 100);
+    });
+    /* Total after all lines */
+    setTimeout(() => {
+      const total = document.getElementById('cost-total');
+      if (total) {
+        total.classList.add('visible');
+        /* Scramble the 700 after total appears */
+        setTimeout(() => {
+          const el = document.getElementById('scramble-700');
+          if (el) scramble(el, '700', 900);
+        }, 200);
+      }
+    }, lines.length * 320 + 300);
+  }
+
+  /* Header */
+  const header = document.getElementById('cost-header');
+  const hObs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    header.classList.add('visible');
+    hObs.disconnect();
+  }, { threshold: 0.35 });
+  hObs.observe(header);
+
+  /* Receipt */
+  const receipt = document.getElementById('cost-receipt');
+  const rObs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    receipt.classList.add('visible');
+    setTimeout(printLines, 400);
+    rObs.disconnect();
+  }, { threshold: 0.2 });
+  rObs.observe(receipt);
+
+  /* Extra card */
+  const extra = document.getElementById('cost-extra');
+  const eObs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    extra.classList.add('visible');
+    eObs.disconnect();
+  }, { threshold: 0.25 });
+  eObs.observe(extra);
+})();
+
+
+/* ─────────────────────────────────────────
+   MEETING SECTION — SCROLL ANIMATIONS
+───────────────────────────────────────── */
+(function () {
+  const header = document.getElementById('meeting-header');
+  const hObs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    header.classList.add('visible');
+    hObs.disconnect();
+  }, { threshold: 0.35 });
+  hObs.observe(header);
+
+  /* 스텝 리스트 한 번에 관측 → 순차 등장 */
+  const stepsList = document.getElementById('steps-list');
+  const stepItems = stepsList ? stepsList.querySelectorAll('.step-item') : [];
+  const stepsObs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    stepItems.forEach((item, i) => {
+      setTimeout(() => item.classList.add('visible'), i * 260);
+    });
+    stepsObs.disconnect();
+  }, { threshold: 0.12 });
+  if (stepsList) stepsObs.observe(stepsList);
+
+  const callout = document.getElementById('meeting-callout');
+  const cObs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    callout.classList.add('visible');
+    cObs.disconnect();
+  }, { threshold: 0.28 });
+  cObs.observe(callout);
+})();
+</script>
+
+</body>
+</html>
